@@ -1,0 +1,128 @@
+'@type': "SoftwareComponentType"
+createdDate: "2016-05-02T18:42:37.898Z"
+lastUpdated: "2016-05-02T18:53:27.118Z"
+id: "Software.Artifactory_Pro"
+name: "Artifactory_Pro"
+description: "Installs Jfrog Artifactory Pro on RHEL/CENTOS Linux"
+publishStatus: "PUBLISHED"
+publishStatusName: "Published"
+schema:
+  fields:
+  - id: "LoginName"
+    label: "LoginName"
+    description: ""
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: "admin"
+    isMultiValued: false
+  - id: "host"
+    label: "Container"
+    description: ""
+    dataType:
+      type: "ref"
+      componentTypeId: "com.vmware.csp.iaas.blueprint.service"
+      classId: "Infrastructure.Machine.Schema"
+      label: "Machine"
+    state:
+      dependencies: []
+      facets:
+      - type: "mandatory"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: true
+      - type: "visible"
+        value:
+          type: "constantClause"
+          value:
+            type: "boolean"
+            value: false
+      - type: "internal"
+        value:
+          type: "constantClause"
+          value:
+            type: "boolean"
+            value: true
+    isMultiValued: false
+  - id: "ArtifactoryURL"
+    label: "ArtifactoryURL"
+    description: ""
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "derivedValue"
+        value:
+          type: "constant"
+      - type: "editable"
+        value:
+          type: "constant"
+          value:
+            type: "boolean"
+            value: false
+    isMultiValued: false
+  - id: "Password"
+    label: "Password"
+    description: ""
+    dataType:
+      type: "primitive"
+      typeId: "STRING"
+    state:
+      dependencies: []
+      facets:
+      - type: "defaultValue"
+        value:
+          type: "constant"
+          value:
+            type: "string"
+            value: "password"
+    isMultiValued: false
+containerFieldId: "host"
+lifecycleTasks:
+- createdDate: "2016-05-02T18:42:37.902Z"
+  lastUpdated: "2016-05-04T23:59:36.934Z"
+  script:
+    scriptContent: "#!/bin/bash\nexport PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/sbin\n\
+      chkconfig artifactory on\nservice artifactory start"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "START"
+    label: "Start"
+- createdDate: "2016-05-02T18:42:37.900Z"
+  lastUpdated: "2016-05-04T23:59:36.934Z"
+  script:
+    scriptContent: "#!/bin/bash\nexport PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin\n\
+      yum -y install wget\nyum -y install java-1.8.0-openjdk\ncd /tmp\nwget https://bintray.com/jfrog/artifactory-pro-rpms/rpm\
+      \ -O bintray-jfrog-artifactory-pro-rpms.repo\nmv bintray-jfrog-artifactory-pro-rpms.repo\
+      \ /etc/yum.repos.d/\nyum -y install jfrog-artifactory-pro"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "INSTALL"
+    label: "Install"
+- createdDate: "2016-05-02T18:42:37.901Z"
+  lastUpdated: "2016-05-04T23:59:36.934Z"
+  script:
+    scriptContent: "#!/bin/bash\nexport PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:/sbin\n\
+      alternatives --set java /usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java\nexport\
+      \ JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk.x86_64/bin/java\nservice iptables\
+      \ stop\nchkconfig iptables off\nservice firewalld stop\nchkconfig firewalld\
+      \ off\nexport my_ip=$(hostname  -I | cut -f1 -d' ')\nArtifactoryURL=http://$my_ip:8081/artifactory"
+    isRebootAfter: false
+    scriptTypeId: "Bash"
+  taskDescriptorRef:
+    id: "CONFIGURE"
+    label: "Configure"

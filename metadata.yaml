@@ -1,0 +1,12 @@
+name: "auto-generated-pkg-7da6de48-4901-4631-ac61-24dfd77a06f8"
+productVersion: "7.0.1-SNAPSHOT"
+data:
+- locator: "composite-blueprint/Artifactory_Pro.yaml"
+  name: "Artifactory_Pro"
+  description: "Artifactory_Pro"
+  dependencies:
+  - "software-component/Software.Artifactory_Pro.yaml"
+- locator: "software-component/Software.Artifactory_Pro.yaml"
+  name: "Artifactory_Pro"
+  description: "Installs Jfrog Artifactory Pro on RHEL/CENTOS Linux"
+exportTime: "2016-05-05T19:19:31.919Z"

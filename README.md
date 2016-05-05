@@ -1,1 +1,0 @@
-# Artifactory-Pro-Blueprint
